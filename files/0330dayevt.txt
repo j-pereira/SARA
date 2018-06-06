@@ -1,0 +1,12 @@
+:Product: Space Weather Event Reports dayevt.txt
+:Issued: 2018 Mar 31 0245 UTC
+# Prepared by the US Dept. of Commerce, NOAA, Space Weather Prediction Center
+# Product description and SWPC contact on the Web
+# http://www.swpc.noaa.gov/wwire.html
+#
+#             Space Weather Event Reports
+#
+:Energetic_Solar_Events: 2018 Mar 30
+#Begin Max  End   Rgn   Loc  Xray  Op 245MHz 10cm   Sweep
+ 0757 0804 0808  2703 S06E71 C4.6  Sf 360           II              
+ 1322 1322 1322                       210                           
