@@ -2,7 +2,7 @@ import urllib.request
 from region import Region
 
 class SRS :
-    fileName = "20180605SRS"
+    fileName = "20180604SRS"
     extension = ".txt"
     urlPath = fileName.upper() + extension
     filePath = "files/" + fileName + extension
@@ -35,8 +35,7 @@ class SRS :
         month = ""
         day = ""
 
-        for line in self.fileLines :
-
+        for line in self.fileLines : 
             lineSplited = line.split(" ")
             
             if lineSplited[0] == ":Issued:" :

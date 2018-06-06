@@ -2,8 +2,8 @@ import urllib.request
 from header import Header
 from event import Event
 
-class DayEvt:
-    fileName = "20140109SGAS"
+class SGAS:
+    fileName = "20180530SGAS"
     extension = ".txt"
     urlPath = fileName + extension
     filePath = "files/" + fileName + extension
@@ -45,20 +45,24 @@ class DayEvt:
                 day = lineSplited[3]
             
             if flag == True :
-                if line == "No Data.\n" :
+                if lineSplited[0] == "B." : 
                     break
                 else : 
-                    event = Event()
-                    event.year = year
-                    event.month = month
-                    event.day = day
-                    event.region = DayEvt.findAttribute(line, "region")
-                    event.xRay = DayEvt.findAttribute(line, "xray")
-                    event.cmRadio = DayEvt.findAttribute(line, "radio")
-                    if (event.region != "") and ((event.xRay != "") or (event.cmRadio != "")) : 
-                        self.events.append(event)
+                    if line == "None\n" : 
+                        break
+                    else : 
+                        event = Event()
+                        event.year = year
+                        event.month = month
+                        event.day = day
+                        event.region = SGAS.findAttribute(line, "region")
+                        event.xRay = SGAS.findAttribute(line, "xray")
+                        event.cmRadio = SGAS.findAttribute(line, "radio")
+                        if (event.region != "") and ((event.xRay != "") or (event.cmRadio != "")) : 
+                            self.events.append(event)
 
-            if lineSplited[0] == "#Begin" :
+            if lineSplited[0] == "Begin" : 
+                print("BEGIN")
                 flag = True
 
                 
@@ -95,7 +99,7 @@ class DayEvt:
         header = ""
         for line in self.fileLines : 
             lineSplited = line.split(" ")
-            if lineSplited[0] == "#Begin" : 
+            if lineSplited[0] == "Begin" : 
                 header = line
                 break
         print("Headers line == : " + line)

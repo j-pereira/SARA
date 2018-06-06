@@ -1,11 +1,11 @@
 from srs import SRS
-from dayevt import DayEvt
+from sgas import SGAS
 
-url = "ftp://ftp.swpc.noaa.gov/pub/latest/"
-url2 = "ftp://ftp.swpc.noaa.gov/pub/warehouse/2018/SRS/"
+urlSRS = "ftp://ftp.swpc.noaa.gov/pub/warehouse/2018/SRS/"
+urlSGAS = "ftp://ftp.swpc.noaa.gov/pub/warehouse/2018/SGAS/"
 
 srs = SRS()
-srs.download(url2)
+srs.download(urlSRS)
 srs.readFile(srs.openFile())
 srs.fileLinesLen()
 
@@ -14,14 +14,13 @@ srs.printRegions()
 
 print("\n ---- \n")
 
+sgas = SGAS()
+#sgas.download(urlSGAS)
+sgas.readFile(sgas.openFile())
+sgas.fileLinesLen()
 
-dayevt = DayEvt()
-#dayevt.download(url)
-dayevt.readFile(dayevt.openFile())
-dayevt.fileLinesLen()
-
-dayevt.setHeadersColumnPosition(dayevt.loadFilesHeader())
-dayevt.loadEvents()
-dayevt.printEvents()
+sgas.setHeadersColumnPosition(sgas.loadFilesHeader())
+sgas.loadEvents()
+sgas.printEvents()
 
 
