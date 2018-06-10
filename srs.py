@@ -69,3 +69,5 @@ class SRS :
         for region in self.regions :
             print(region.year + " | " + region.month + " | " + region.day  + " | " + region.id  + " | " + region.area  + " | " + region.sunspotNmbr  + " | " + region.sunspotClassification)
 
+    
+
