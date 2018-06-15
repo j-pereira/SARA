@@ -1,20 +1,30 @@
 import urllib.request
 from region import Region
 
-class SRS :
-    fileName = "20180604SRS"
-    extension = ".txt"
-    urlPath = fileName.upper() + extension
-    filePath = "files/" + fileName + extension
+class SRS : 
+    filePath = "files/SRS/"
     fileLines = list()
     regions = list()
 
 
     
-    def download(self, url) :
-        urllib.request.urlretrieve(url + self.urlPath, self.filePath)
+    def downloadHoleYear(self, url, year) : 
+        filesName = year + "_SRS.tar.gz"
+        url = url + year + "/" + filesName
+        path = self.filePath + year + "/" + filesName
+        urllib.request.urlretrieve(url, path)
 
-    def openFile(self) :
+    
+    def downloadDay(self, url, year, day) : 
+        filesName = "/" + day + "SRS.txt" 
+        url = url + year + "/SRS" + filesName
+        path = self.filePath + year + filesName
+        print(url)
+        print(path)
+        urllib.request.urlretrieve(url, path)
+
+
+    def openFile(self) : 
         return open(self.filePath)
 
     def readFile(self, _file) :
