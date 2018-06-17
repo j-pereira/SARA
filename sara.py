@@ -11,7 +11,7 @@ srs = SRS()
 #srs.loadRegions()
 #srs.printRegions()
 
-print("\n ---- \n")
+#print("\n ---- \n")
 
 sgas = SGAS()
 #sgas.download(urlSGAS)
@@ -30,8 +30,19 @@ if datasetService.isDatasetUpdated() :
     print("Already updated")
 else :
     datasetService.setListOfDaysToUpdate()
-datasetService.printListOfDaysToUpdate()
+    #datasetService.printListOfDaysToUpdate()
 
-datasetService.verifyYearsNeedingUpdate()
-datasetService.printYearsToUpdate()
-datasetService.downloadRegionFiles()
+    datasetService.verifyYearsNeedingUpdate()
+    #datasetService.printYearsToUpdate()
+    #datasetService.downloadFiles()
+
+    print("\n ---- \n")
+
+    datasetService.loadRegionsToUpdate()
+    datasetService.printRegionsToUpdate()
+    
+    print("\n ---- \n")
+
+    datasetService.loadEventsToUpdate()
+    datasetService.printEventsToUpdate()
+    print("\n ---- \n")

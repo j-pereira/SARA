@@ -3,27 +3,43 @@ from header import Header
 from event import Event
 
 class SGAS:
-    fileName = "20180530SGAS"
-    extension = ".txt"
-    urlPath = fileName + extension
-    filePath = "files/" + fileName + extension
+    filePath = "files/SGAS/"
+    tarFileName = "_SGAS.tar.gz"
+    dayFileName = "SGAS.txt"
     fileLines = list()
     events = list()
 
 
     
-    def download(self, url) :
-        urllib.request.urlretrieve(url + self.urlPath, self.filePath)
+    def downloadHoleYear(self, url, year) : 
+        filesName = year + self.tarFileName
+        url = url + year + "/" + filesName
+        path = self.filePath + year + "/" + filesName
+        urllib.request.urlretrieve(url, path)
+        print("Downloaded: " + url)
 
-    def openFile(self) :
-        return open(self.filePath)
+    
+    def downloadDay(self, url, year, day) : 
+        filesName = "/" + day + self.dayFileName 
+        url = url + year + "/SGAS" + filesName
+        path = self.filePath + year + filesName
+        urllib.request.urlretrieve(url, path)
+        print("Downloaded: " + url)
+ 
+    
+    def openFile(self, year, day) : 
+        return open(self.filePath + year + "/" + day + self.dayFileName)
+
 
     def readFile(self, _file) :
         for line in _file:
             self.fileLines.append(line)
+        _file.close()
     
+
     def fileLinesLen(self) :
         print("Tamanho do arquivo: " + str(len(self.fileLines)))
+
 
     def printSomeLines(self) :
         for line in self.fileLines:
@@ -62,7 +78,6 @@ class SGAS:
                             self.events.append(event)
 
             if lineSplited[0] == "Begin" : 
-                print("BEGIN")
                 flag = True
 
                 
@@ -79,8 +94,6 @@ class SGAS:
         elif flag == "radio" :
             cont = Header.cmRadio
         
-        print("Flag: " + flag + " - Cont: " + str(cont))
-
         while line[cont] != " " :
             cont = cont - 1
 
@@ -89,7 +102,6 @@ class SGAS:
             attribute += line[pos]
             pos += 1
         
-        print("Attribute: " + attribute)
         return attribute
 
 
@@ -102,7 +114,6 @@ class SGAS:
             if lineSplited[0] == "Begin" : 
                 header = line
                 break
-        print("Headers line == : " + line)
         return header
     
 
@@ -119,18 +130,22 @@ class SGAS:
                     if Header.xRay != 0 :
                         Header.cmRadio = i
                         break
-        print("Region: " + str(Header.region))
-        print("Xray: " + str(Header.xRay))
-        print("Radio: " + str(Header.cmRadio))
     
     
-    def cleanHeadersPosition(self) :
+    @staticmethod
+    def cleanHeadersPosition() :
         Header.region = 0
         Header.xRay = 0
         Header.cmRadio = 0
 
 
     def printEvents(self) :
-        print("\n PRINT EVENTS: ")
+        print("\nPRINT EVENTS: ")
         for event in self.events :
             print(event.year + " | " + event.month + " | " + event.day + " | " + event.region + " | " + event.xRay + " | " + event.cmRadio + "\n")
+
+
+    def clearLists(self) : 
+        self.fileLines = list()
+        self.events = list()
+        SGAS.cleanHeadersPosition()

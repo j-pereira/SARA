@@ -1,0 +1,30 @@
+:Product: 0614SGAS.txt
+:Issued: 2018 Jun 14 0245 UTC
+# Prepared jointly by the U.S. Dept. of Commerce, NOAA,
+# Space Weather Prediction Center and the U.S. Air Force.
+#
+Joint USAF/NOAA Solar and Geophysical Activity Summary
+SGAS Number 165 Issued at 0245Z on 14 Jun 2018
+This report is compiled from data received at SWO on 13 Jun
+A.  Energetic Events
+Begin  Max  End  Rgn   Loc   Xray  Op 245MHz 10cm   Sweep
+ 1153 1158 1206  2510        B6.0     470    43                     
+ 1225 1225 1225                       100                           
+ 1236 1244 1253  2529 N11E12       Sf 140                           
+ 1304 1304 1304                       100                           
+ 1358 1358 1358                       120                           
+B.  Proton Events:  None.
+C.  Geomagnetic Activity Summary:  The geomagnetic field was mostly
+quiet with an isolated unsettled period at the end of the day.
+D.  Stratwarm:  Not Available
+E.  Daily Indices: (real-time preliminary/estimated values)
+10 cm 071  SSN 016  Afr/Ap 007/005   X-ray Background A3.0
+Daily Proton Fluence (flux accumulation over 24 hrs)
+GT 1 MeV 1.2e+06   GT 10 MeV 1.9e+04 p/(cm2-ster-day)
+(GOES-15 satellite synchronous orbit W134 degrees)
+Daily Electron Fluence
+GT 2 MeV 5.20e+07 e/(cm2-ster-day)
+(GOES-15 satellite synchronous orbit W134 degrees)
+3 Hour K-indices:
+Boulder 1 2 1 2 2 3 2 2 Planetary 1 1 1 1 1 1 2 3 
+F.  Comments:  None
