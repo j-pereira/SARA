@@ -1,27 +1,6 @@
-from srs import SRS
-from sgas import SGAS
 from datasetService import DatasetService
 
-
-
-srs = SRS()
-#srs.download(urlSRS)
-#srs.readFile(srs.openFile())
-#srs.fileLinesLen()
-#srs.loadRegions()
-#srs.printRegions()
-
-#print("\n ---- \n")
-
-sgas = SGAS()
-#sgas.download(urlSGAS)
-#sgas.readFile(sgas.openFile())
-#sgas.fileLinesLen()
-#sgas.setHeadersColumnPosition(sgas.loadFilesHeader())
-#sgas.loadEvents()
-#sgas.printEvents()
-
-print("\n ---- \n")
+print("\nSARA - Software para Análise de Regiões Ativas\n")
 
 datasetService = DatasetService()
 datasetService.setLastDateInDataset()
@@ -31,7 +10,6 @@ if datasetService.isDatasetUpdated() :
 else :
     datasetService.setListOfDaysToUpdate()
     #datasetService.printListOfDaysToUpdate()
-
     datasetService.verifyYearsNeedingUpdate()
     #datasetService.printYearsToUpdate()
     #datasetService.downloadFiles()
@@ -40,9 +18,11 @@ else :
 
     datasetService.loadRegionsToUpdate()
     datasetService.printRegionsToUpdate()
-    
+
     print("\n ---- \n")
 
     datasetService.loadEventsToUpdate()
     datasetService.printEventsToUpdate()
     print("\n ---- \n")
+
+    datasetService.printListMagConfiguration(datasetService.createDatasetFileLines())

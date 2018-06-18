@@ -142,7 +142,6 @@ class DatasetService :
         for day in self.listOfDaysToUpdate : 
             self.srs.readFile(self.srs.openFile(day[:4], day))
             self.srs.loadRegions()
-            self.srs.printRegions()
             if self.srs.regions : 
                 self.regionsToUpdate.extend(self.srs.regions)
             self.srs.clearLists()
@@ -153,7 +152,6 @@ class DatasetService :
             self.sgas.readFile(self.sgas.openFile(day[:4], day))
             self.sgas.setHeadersColumnPosition(self.sgas.loadFilesHeader())
             self.sgas.loadEvents()
-            self.sgas.printEvents()
             if self.sgas.events : 
                 self.eventsToUpdate.extend(self.sgas.events)
             self.sgas.clearLists()
@@ -169,25 +167,78 @@ class DatasetService :
     def printEventsToUpdate(self) : 
         print("\nPRINT EVENTS TO UPDATE: ")
         for event in self.eventsToUpdate : 
-            print(event.year + " | " + event.month + " | " + event.day + " | " + event.region + " | " + event.xRay + " | " + event.cmRadio + "\n")
+            print(event.year + " | " + event.month + " | " + event.day + " | " + event.region + " | " + event.xRay + " | " + event.cmRadio)
+        
+
+
+
+    def createDatasetFileLines(self) : 
+        listMagConfiguration = list()
+        magConfiguration = ["", "", "", "", "", "", "", "", ""]
+        for region in self.regionsToUpdate : 
+            magConfiguration[0] = region.year
+            magConfiguration[1] = region.month
+            magConfiguration[2] = region.day
+            magConfiguration[3] = region.id
+            magConfiguration[4] = region.area
+            magConfiguration[5] = region.sunspotNmbr
+            magConfiguration[6] = region.sunspotClassification
+
+            flag = False
+            for event in self.eventsToUpdate : 
+                if (region.year == event.year) and (region.month == event.month) and (region.day == event.day) and (region.id == event.region) : 
+                    magConfiguration[7] = event.xRay
+                    magConfiguration[8] = event.cmRadio
+
+                    flag = True
+                    line = magConfiguration[0] + "," + magConfiguration[1] + "," + magConfiguration[2] + "," + magConfiguration[3] + "," + magConfiguration[4] + "," + magConfiguration[5] + "," + magConfiguration[6]  + "," + magConfiguration[7] + "," + magConfiguration[8]
+                    listMagConfiguration.append(line)
+            
+            if flag == False : 
+                line = magConfiguration[0] + "," + magConfiguration[1] + "," + magConfiguration[2] + "," + magConfiguration[3] + "," + magConfiguration[4] + "," + magConfiguration[5] + "," + magConfiguration[6]  + "," + magConfiguration[7] + "," + magConfiguration[8]
+                listMagConfiguration.append(line)
+            
+            for i in range(len(magConfiguration)) : 
+                magConfiguration[i] = ""
+            
+        return listMagConfiguration
+    
+
+
+
+
+
+    def printListMagConfiguration(self, listMagConfiguration) : 
+        print("\n\nPRINT LIST MAGCONFIG: ")
+        for m in listMagConfiguration : 
+            print(m)
+
+
+
+
+            
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+    #def updateDataset(self) : 
         
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 '''
+
 
 
     def updateDataset(self, lastDateInDataset) : 

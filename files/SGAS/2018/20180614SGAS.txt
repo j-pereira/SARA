@@ -8,11 +8,9 @@ SGAS Number 165 Issued at 0245Z on 14 Jun 2018
 This report is compiled from data received at SWO on 13 Jun
 A.  Energetic Events
 Begin  Max  End  Rgn   Loc   Xray  Op 245MHz 10cm   Sweep
- 1153 1158 1206  2510        B6.0     470    43                     
- 1225 1225 1225                       100                           
- 1236 1244 1253  2529 N11E12       Sf 140                           
- 1304 1304 1304                       100                           
- 1358 1358 1358                       120                           
+ 0809 0823 0832  2713 N06W07 C4.4  Sn 110    79        IV           
+ 0833 0833 0835                       150                           
+ 0928 0931 0947  2713 N18E38       Sf                  IV  
 B.  Proton Events:  None.
 C.  Geomagnetic Activity Summary:  The geomagnetic field was mostly
 quiet with an isolated unsettled period at the end of the day.

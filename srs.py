@@ -74,7 +74,7 @@ class SRS :
                         region.id = lineSplited[0]
                         region.area = lineSplited[6]
                         region.sunspotNmbr = lineSplited[12]
-                        region.sunspotClassification = lineSplited[13]
+                        region.sunspotClassification = lineSplited[13].rstrip('\n')
                         self.regions.append(region)
             
             if lineSplited[0] == "Nmbr" : 
