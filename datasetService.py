@@ -9,6 +9,7 @@ from sgas import SGAS
 class DatasetService :
     srs = SRS()
     sgas = SGAS()
+    path = "files/dataset.txt"
     url = "ftp://ftp.swpc.noaa.gov/pub/warehouse/"
     lastDateInDataset = datetime.today().date()
     today = datetime.today().date()
@@ -20,9 +21,15 @@ class DatasetService :
         
 
 
+    def openFile(self, path, mode) : 
+        return open(path, mode)
+    
+    def closeFile(self, _file) : 
+        _file.close()
+
 
     def setLastDateInDataset(self) :         
-        _file = open("files/dataset.txt")
+        _file = self.openFile(self.path, 'r')
         for line in _file :
             self.fileLines.append(line)
 
@@ -31,6 +38,7 @@ class DatasetService :
         date = datetime.strptime(strDate, "%Y%b%d").date()
         self.lastDateInDataset = datetime.strptime(strDate, "%Y%b%d").date()
         print("Last day in dataset: " + str(self.lastDateInDataset))
+        self.closeFile(_file)
         
     
     def isDatasetUpdated(self) : 
@@ -77,7 +85,7 @@ class DatasetService :
             print(year + " - " + lastYear)
 
             if year == lastYear : 
-                daysOfLastYear = DatasetService.daysOfLastYear(self.listOfDaysToUpdate, lastYear)
+                daysOfLastYear = self.daysOfLastYear(self.listOfDaysToUpdate, lastYear)
                 for date in daysOfLastYear : 
                     self.srs.downloadDay(self.url, date[:4], date)
                     self.sgas.downloadDay(self.url, date[:4], date)
@@ -90,8 +98,7 @@ class DatasetService :
 
 
 
-    @staticmethod
-    def daysOfLastYear(listOfDaysToUpdate, lastYear) : 
+    def daysOfLastYear(self, listOfDaysToUpdate, lastYear) : 
         daysOfLastYear = list()
         for date in listOfDaysToUpdate : 
             if date[:4] == lastYear :
@@ -171,7 +178,6 @@ class DatasetService :
         
 
 
-
     def createDatasetFileLines(self) : 
         listMagConfiguration = list()
         magConfiguration = ["", "", "", "", "", "", "", "", ""]
@@ -191,35 +197,64 @@ class DatasetService :
                     magConfiguration[8] = event.cmRadio
 
                     flag = True
-                    line = magConfiguration[0] + "," + magConfiguration[1] + "," + magConfiguration[2] + "," + magConfiguration[3] + "," + magConfiguration[4] + "," + magConfiguration[5] + "," + magConfiguration[6]  + "," + magConfiguration[7] + "," + magConfiguration[8]
+                    line = magConfiguration[0] + "," + magConfiguration[1] + "," + magConfiguration[2] + "," + magConfiguration[3] + "," + magConfiguration[4] + "," + magConfiguration[5] + "," + magConfiguration[6]  + "," + magConfiguration[7] + "," + magConfiguration[8]  + "\n"
                     listMagConfiguration.append(line)
             
             if flag == False : 
-                line = magConfiguration[0] + "," + magConfiguration[1] + "," + magConfiguration[2] + "," + magConfiguration[3] + "," + magConfiguration[4] + "," + magConfiguration[5] + "," + magConfiguration[6]  + "," + magConfiguration[7] + "," + magConfiguration[8]
+                line = magConfiguration[0] + "," + magConfiguration[1] + "," + magConfiguration[2] + "," + magConfiguration[3] + "," + magConfiguration[4] + "," + magConfiguration[5] + "," + magConfiguration[6]  + "," + magConfiguration[7] + "," + magConfiguration[8] + "\n"
                 listMagConfiguration.append(line)
             
             for i in range(len(magConfiguration)) : 
                 magConfiguration[i] = ""
             
-        return listMagConfiguration
+        self.fileLines = list()
+        self.fileLines = listMagConfiguration
+    
+
+
+    
+    def printFileLines(self) : 
+        print("\n\nPRINT DATASET FILE LINES: ")
+        for m in self.fileLines : 
+            print(m, end='')
+
+
+
+    def saveDatasetFile(self) : 
+        _file = self.openFile(self.path, 'a')
+        _file.writelines(self.fileLines)
+        self.closeFile(_file)
+
+
+
+
+    def updateDataset(self) : 
+        self.setListOfDaysToUpdate()
+        #self.printListOfDaysToUpdate()
+        self.verifyYearsNeedingUpdate()
+        #self.printYearsToUpdate()
+        #self.downloadFiles()
+
+        print("\n ---- \n")
+
+        self.loadRegionsToUpdate()
+        self.printRegionsToUpdate()
+
+        print("\n ---- \n")
+
+        self.loadEventsToUpdate()
+        self.printEventsToUpdate()
+        print("\n ---- \n")
+
+        self.createDatasetFileLines()
+        self.printFileLines()
+        self.saveDatasetFile()
     
 
 
 
 
 
-    def printListMagConfiguration(self, listMagConfiguration) : 
-        print("\n\nPRINT LIST MAGCONFIG: ")
-        for m in listMagConfiguration : 
-            print(m)
-
-
-
-
-            
-
-
-                    
 
 
 
@@ -229,10 +264,6 @@ class DatasetService :
 
 
 
-
-
-    #def updateDataset(self) : 
-        
 
 
 
