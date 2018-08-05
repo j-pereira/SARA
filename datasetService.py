@@ -230,10 +230,10 @@ class DatasetService :
 
     def updateDataset(self) : 
         self.setListOfDaysToUpdate()
-        #self.printListOfDaysToUpdate()
+        self.printListOfDaysToUpdate()
         self.verifyYearsNeedingUpdate()
-        #self.printYearsToUpdate()
-        #self.downloadFiles()
+        self.printYearsToUpdate()
+        self.downloadFiles()
 
         print("\n ---- \n")
 
@@ -258,28 +258,3 @@ class DatasetService :
 
 
 
-
-
-
-
-
-
-
-
-
-
-'''
-
-
-
-    def updateDataset(self, lastDateInDataset) : 
-
-    def saveDatasetInCSVFile(self) : 
-
-    def loadRegionFiles(self) : 
-    
-    def loadEventsFiles(self) : 
-
-    def matchRegionsEvents(self) : 
-
-'''
