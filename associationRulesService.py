@@ -7,7 +7,7 @@ import csv
 
 class AssociationRulesService : 
     originalDataset = "files/dataset.txt"
-    classifiedDataset = "files/classifiedDataset"
+    classifiedDataset = "files/classifiedDataset.txt"
     transactionalDataset = "files/transactionalDataset.txt"
 
 
