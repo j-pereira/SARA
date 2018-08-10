@@ -6,14 +6,15 @@ import csv
 
 
 class AssociationRulesService : 
-    originalDatasetFile = "files/dataset.txt"
-    transactionalDatasetFile = "files/transactionalDataset.txt"
+    originalDataset = "files/dataset.txt"
+    classifiedDataset = "files/classifiedDataset"
+    transactionalDataset = "files/transactionalDataset.txt"
 
 
 
 
     def categorizeDataset(self) : 
-        _file = open(self.originalDatasetFile)
+        _file = open(self.originalDataset)
         filelines = list()
 
         for line in _file : 
@@ -23,7 +24,8 @@ class AssociationRulesService :
             xray = ""
             radio = ""
 
-            for i in range(9) :
+            for i in range(9) : 
+                spl[i] = spl[i].rstrip("\n")
                 if i == 4 : 
                     area = self.classifyArea(spl[i])
                 if i == 6 : 
@@ -36,102 +38,116 @@ class AssociationRulesService :
             newLine = spl[0] + "," + spl[1] + "," + spl[2] + "," + spl[3] + "," + area + "," + sunspot + "," + xray + "," + radio + "\n"
             filelines.append(newLine)
 
-        _file = open("files/transaction.txt", 'w')
+        _file = open(self.classifiedDataset, 'w')
         _file.writelines(filelines)
         _file.close()
 
 
-
-
-
-    
     def classifyArea(self, area) : 
         if area != "" : 
             area = int(area)
             if area < 200 : 
-                return "areapequena"
-            else if area >= 200 and area < 500 : 
-                return "areamoderada"
-            else if area >= 500 and area < 1000 : 
-                return "areagrande" 
-            else if area >=1000 :
-                return "areagigantesca"
+                return "area_small"
+            elif area >= 200 and area < 500 : 
+                return "area_medium"
+            elif area >= 500 and area < 1000 : 
+                return "area_large" 
+            elif area >=1000 :
+                return "area_huge"
         else : 
             return area
 
     
     def classifySunspot(self, sunspot) : 
-        return sunspot.lower()
+        return sunspot.lower().replace("-", "_")
+
     
     def classifyXray(self, xray) : 
         if xray != "" : 
-            if xray[:1] == "A" : 
-            return "xrayA"
-            else if xray[:1] == "B" :
-                return "xrayB"
-            else if xray[:1] == "C" : 
-                return "xrayC"
-            else if xray[:1] == "M" :
-                return "xrayM"
-            else if xray[:1] == "X" : 
-                return "xrayX"
+            return "xray_" + xray[:1]
         else : 
             return xray
 
     
-    def classifyRadio(self, radio) :
-        return ""
+    def classifyRadio(self, radio) : 
+        if radio != "" : 
+            radio = int(radio)
+            if radio < 80 : 
+                return "radio_low"
+            elif radio >= 80 and radio < 120 : 
+                return "radio_medium"
+            elif radio >= 120 and radio < 160 : 
+                return "radio_high" 
+            elif radio >= 160 :
+                return "radio_ultra_high"
+        else : 
+            return radio
 
     
 
 
     def createTransactionalDataset(self) : 
-
-        _file = open(self.originalDatasetFile)
-
-        newLine = ""
+        _file = open(self.classifiedDataset)
         fileLines = list()
-
         for line in _file : 
+            fileLines.append(line)
+
+        fileLines = self.removeDateAndRegion(fileLines)
+        fileLines = self.cleanEmptyAttributes(fileLines)
+        
+        _file = open(self.transactionalDataset, 'w')
+        _file.writelines(fileLines)
+        _file.close()
+
+    
+    def removeDateAndRegion(self, fileLines) : 
+        newFileLines = list()
+        for line in fileLines : 
             spl = line.split(",")
-            for i in range(9) : 
+            newFileLines.append(spl[4] + "," + spl[5] + "," + spl[6] + "," + spl[7])
+
+        return newFileLines 
+
+
+    def cleanEmptyAttributes(self, fileLines) : 
+        newLine = ""
+        newFileLines = list()
+
+        for line in fileLines : 
+            line = line.split("\n")
+            spl = line[0].split(",")
+
+            for i in range(4) : 
                 if spl[i] != "":
                     if spl[i] != "\n" : 
-                        if i != 0 :
-                            newLine += "," + spl[i]
+                        if newLine != "" :  
+                            if newLine[:-1] != "," : 
+                                newLine += "," + spl[i]
+                            else : 
+                                newLine += spl[i]
                         else : 
                             newLine += spl[i]
-            fileLines.append(newLine)
+            newFileLines.append(newLine + "\n")
             newLine = ""
         
-        for line in fileLines : 
-            print(line)
-
+        return newFileLines
 
 
 
 
     def generateAssociationRules(self) : 
-        _file = open('files/dataset.txt')
-
-        with open('files/dataset.txt', 'r') as f:
+        with open(self.transactionalDataset, 'r') as f:
             reader = csv.reader(f)
             dataset = list(reader)
-
-        print(dataset)
-        print("-----------\n")
 
         te = TransactionEncoder()
         te_ary = te.fit(dataset).transform(dataset)
         df = pd.DataFrame(te_ary, columns=te.columns_)
 
-        print(df)
-        print("-----------\n\n")
-
         frequent_itemsets = apriori(df, min_support=0.1, use_colnames=True)
         print(frequent_itemsets)
-        print("-----------\n\n")
+        print("\n-----------\n")
 
-        rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+        rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.1)
         print(rules)
 

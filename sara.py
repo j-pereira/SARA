@@ -9,20 +9,11 @@ datasetService.setLastDateInDataset()
 if datasetService.isDatasetUpdated() : 
     print("Already updated")
 else :
-    #datasetService.updateDataset()
+    datasetService.updateDataset()
 
     print("\n Association Rules ---- \n")
 
     associationRulesService = AssociationRulesService()
     associationRulesService.categorizeDataset()
     associationRulesService.createTransactionalDataset()
-
-
-'''         
-print("\n Association Rules ---- \n")
-
-associationRulesService = AssociationRulesService()
-associationRulesService.generateAssociationRules()
-
-
-'''
+    associationRulesService.generateAssociationRules()
