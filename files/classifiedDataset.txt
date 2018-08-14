@@ -1,0 +1,16 @@
+2018,Jun,21,2713,,beta,,
+2018,Jun,21,2714,areasmall,beta,xrayX,
+2018,Jun,21,2715,areasmall,beta,xrayC,
+2018,Jun,22,2713,,beta,,
+2018,Jun,22,2714,areasmall,beta,,radiolow
+2018,Jun,22,2715,areasmall,beta,xrayC,
+2018,Jun,23,2713,areasmall,beta,,radiomedium
+2018,Jun,23,2715,areasmall,beta,,
+2018,Jun,24,2713,areasmall,beta,,
+2018,Jun,24,2715,areahuge,betadelta,xrayX,radioultra_high
+2018,Jun,25,2715,areasmall,beta,xrayM,
+2018,Jun,26,2715,areasmall,,,
+2018,Jun,27,2715,areasmall,alpha,,
+2018,Jul,22,2716,areasmall,alpha,,
+2018,Aug,02,2717,areasmall,alpha,xrayB,radiohigh
+2018,Aug,03,2717,areasmall,alpha,,

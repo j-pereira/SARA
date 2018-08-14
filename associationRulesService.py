@@ -47,24 +47,24 @@ class AssociationRulesService :
         if area != "" : 
             area = int(area)
             if area < 200 : 
-                return "area_small"
+                return "areasmall"
             elif area >= 200 and area < 500 : 
-                return "area_medium"
+                return "areamedium"
             elif area >= 500 and area < 1000 : 
-                return "area_large" 
+                return "arealarge" 
             elif area >=1000 :
-                return "area_huge"
+                return "areahuge"
         else : 
             return area
 
     
     def classifySunspot(self, sunspot) : 
-        return sunspot.lower().replace("-", "_")
+        return sunspot.lower().replace("-", "")
 
     
     def classifyXray(self, xray) : 
         if xray != "" : 
-            return "xray_" + xray[:1]
+            return "xray" + xray[:1]
         else : 
             return xray
 
@@ -73,13 +73,13 @@ class AssociationRulesService :
         if radio != "" : 
             radio = int(radio)
             if radio < 80 : 
-                return "radio_low"
+                return "radiolow"
             elif radio >= 80 and radio < 120 : 
-                return "radio_medium"
+                return "radiomedium"
             elif radio >= 120 and radio < 160 : 
-                return "radio_high" 
+                return "radiohigh" 
             elif radio >= 160 :
-                return "radio_ultra_high"
+                return "radioultra_high"
         else : 
             return radio
 
@@ -149,5 +149,6 @@ class AssociationRulesService :
         print("\n-----------\n")
 
         rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.1)
-        print(rules)
+        
+        return rules
 

@@ -1,6 +1,20 @@
-from datasetService import DatasetService
-from associationRulesService import AssociationRulesService
+from flask import Flask
+from flask_restful import Resource, Api
+from saraController import AssociationRules
 
+app = Flask(__name__)
+api = Api(app)
+
+api.add_resource(AssociationRules, '/')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+
+
+'''
 print("\nSARA - Software para Análise de Regiões Ativas\n")
 
 datasetService = DatasetService()
@@ -17,3 +31,5 @@ else :
     associationRulesService.categorizeDataset()
     associationRulesService.createTransactionalDataset()
     associationRulesService.generateAssociationRules()
+'''
+
