@@ -1,64 +1,58 @@
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
+from datasetService import DatasetService
+from associationRulesService import AssociationRulesService
 import pandas as pd
-from saraService import SARA
 import json
 import csv
-
-class FrozensetEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, frozenset) : 
-            elements = list()
-            for i in range(len(obj)) : 
-                x, *_ = obj
-                elements.append(x)
-                print(elements)
-            '''
-            x = ""
-            for i in range(len(elements)) : 
-                if i != 0 : 
-                    x += "," + elements[i]
-                else : 
-                    x += elements[i]
-            '''
-            print(x)
-            return x
-        else :   
-            return json.JSONEncoder.default(self, obj)
-
 
 
 def dumper(obj):
     try:
         return obj.toJSON()
     except:
-        '''
-        for i in range(len(obj)) : 
-            j = ""
-            if isinstance(obj, frozenset) : 
-                n, *_ = obj
-                m = {'obj': n}
-                print(m)
-            j += str(m)'''
-
-        '''x = obj['antecedants']
-        x += obj['support']
-        x += obj['antecedant support']
-        x += obj['consequent support']
-        x += obj['support']
-        x += obj['consequent']
-        '''
-
         return str(obj)
 
 
 
-class AssociationRules(Resource) :
+class DatasetController(Resource) : 
 
     def get(self) : 
-        
-        sara = SARA()
-        rules = sara.getAssociationRules()
+        datasetService = DatasetService()
+        associationRulesService = AssociationRulesService()
 
-        #_json = json.dumps(rules, cls=FrozensetEncoder)
-      
-        return json.dumps(rules.to_dict(), default=dumper)
+        datasetService.setLastDateInDataset()
+        #if not datasetService.isDatasetUpdated() : 
+        #    datasetService.updateDataset()
+        
+        associationRulesService.categorizeDataset()
+        dataset = associationRulesService.getClassifiedDataset()
+        reader = csv.DictReader(dataset, fieldnames = ('year','month','day','region', 'area', 'magClassification', 'xray', 'radio'))  
+        out = json.dumps( [ row for row in reader ] )  
+        
+        return json.loads(out)
+    
+
+    async def post(self) : 
+        parser = reqparse.RequestParser()
+        parser.add_argument('startYear')
+        parser.add_argument('startMonth')
+        parser.add_argument('startDay')
+        parser.add_argument('endYear')
+        parser.add_argument('endMonth')
+        parser.add_argument('endDay')
+        args = parser.parse_args()
+        
+        return await args
+
+
+
+class AssociationRulesController(Resource) :
+
+    def get(self) : 
+        associationRulesService = AssociationRulesService()
+        associationRulesService.createTransactionalDataset()
+        rules = associationRulesService.generateAssociationRules()
+        print(rules)
+        out = json.dumps(rules.to_dict(), default=dumper)
+        
+        return json.loads(out)

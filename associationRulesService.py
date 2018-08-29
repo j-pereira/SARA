@@ -133,12 +133,20 @@ class AssociationRulesService :
         return newFileLines
 
 
-
-
-    def generateAssociationRules(self) : 
+    def getTransactionalDataset(self) : 
         with open(self.transactionalDataset, 'r') as f:
             reader = csv.reader(f)
             dataset = list(reader)
+        return dataset
+
+
+    def getClassifiedDataset(self) : 
+        return open(self.classifiedDataset, 'r' )  
+
+
+
+    def generateAssociationRules(self) : 
+        dataset = self.getTransactionalDataset()
 
         te = TransactionEncoder()
         te_ary = te.fit(dataset).transform(dataset)
