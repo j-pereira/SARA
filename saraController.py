@@ -14,8 +14,9 @@ def dumper(obj):
 
 
 
-class DatasetController(Resource) : 
 
+class DatasetController(Resource) : 
+    
     def get(self) : 
         datasetService = DatasetService()
         associationRulesService = AssociationRulesService()
