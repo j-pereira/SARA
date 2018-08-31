@@ -79,6 +79,21 @@ class SRS :
             
             if lineSplited[0] == "Nmbr" : 
                 flag = True
+            
+            print(line)
+           
+       
+        if not self.regions : 
+            region = Region()
+            region.year = year
+            region.month = month
+            region.day = day
+            region.id = ''
+            region.area = ''
+            region.sunspotNmbr = ''
+            region.sunspotClassification = ''
+            self.regions.append(region)
+
 
 
     def printRegions(self) :

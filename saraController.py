@@ -13,17 +13,43 @@ def dumper(obj):
         return str(obj)
 
 
+class UpdateDataset(Resource) : 
 
-
-class DatasetController(Resource) : 
-    
     def get(self) : 
         datasetService = DatasetService()
         associationRulesService = AssociationRulesService()
-
         datasetService.setLastDateInDataset()
-        #if not datasetService.isDatasetUpdated() : 
-        #    datasetService.updateDataset()
+        if not datasetService.isDatasetUpdated() : 
+            datasetService.updateDataset()
+        datasetService.setLastDateInDataset()
+        out = json.dumps({
+            'data': str(datasetService.lastDateInDataset),
+            'updated': datasetService.isDatasetUpdated()
+        })
+        return json.loads(out)
+    
+
+
+
+class LastDateDataset(Resource) : 
+
+    def get(self) : 
+        datasetService = DatasetService()
+        associationRulesService = AssociationRulesService()
+        datasetService.setLastDateInDataset()
+        out = json.dumps({
+            'data': str(datasetService.lastDateInDataset),
+            'updated': datasetService.isDatasetUpdated()
+        })
+        return json.loads(out)
+
+
+
+class DatasetController(Resource) : 
+
+    def get(self) : 
+        datasetService = DatasetService()
+        associationRulesService = AssociationRulesService()
         
         associationRulesService.categorizeDataset()
         dataset = associationRulesService.getClassifiedDataset()
@@ -33,7 +59,7 @@ class DatasetController(Resource) :
         return json.loads(out)
     
 
-    async def post(self) : 
+    def post(self) : 
         parser = reqparse.RequestParser()
         parser.add_argument('startYear')
         parser.add_argument('startMonth')
@@ -43,7 +69,7 @@ class DatasetController(Resource) :
         parser.add_argument('endDay')
         args = parser.parse_args()
         
-        return await args
+        return args
 
 
 
