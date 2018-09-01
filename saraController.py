@@ -21,7 +21,7 @@ class UpdateDataset(Resource) :
         datasetService.setLastDateInDataset()
         if not datasetService.isDatasetUpdated() : 
             datasetService.updateDataset()
-        datasetService.setLastDateInDataset()
+            datasetService.setLastDateInDataset()
         out = json.dumps({
             'data': str(datasetService.lastDateInDataset),
             'updated': datasetService.isDatasetUpdated()
@@ -61,15 +61,30 @@ class DatasetController(Resource) :
 
     def post(self) : 
         parser = reqparse.RequestParser()
+        parser.add_argument('holeBase')
         parser.add_argument('startYear')
         parser.add_argument('startMonth')
         parser.add_argument('startDay')
         parser.add_argument('endYear')
         parser.add_argument('endMonth')
         parser.add_argument('endDay')
+        parser.add_argument('area')
+        parser.add_argument('magClassification')
+        parser.add_argument('xray')
+        parser.add_argument('radio')
         args = parser.parse_args()
         
-        return args
+
+        datasetService = DatasetService()
+        associationRulesService = AssociationRulesService()
+        
+        associationRulesService.categorizeDataset()
+        dataset = associationRulesService.getClassifiedDatasetByPeriod(args.holeBase, args.startYear, args.startMonth, args.startDay, args.endYear, args.endMonth, args.endDay, args.area, args.magClassification, args.xray, args.radio)
+
+        reader = csv.DictReader(dataset, fieldnames = ('year','month','day','region', 'area', 'magClassification', 'xray', 'radio'))  
+        out = json.dumps( [ row for row in reader ] )  
+        
+        return json.loads(out)
 
 
 

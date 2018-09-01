@@ -142,6 +142,22 @@ class AssociationRulesService :
 
     def getClassifiedDataset(self) : 
         return open(self.classifiedDataset, 'r' )  
+    
+
+
+    def getClassifiedDatasetByPeriod(self, holeBase, startYear, startMonth, startDay, endYear, endMonth, endDay, area, magClassification, xray, radio) : 
+        dataset = self.getClassifiedDataset()
+        dataSerched = list()
+        transaction = ""
+
+        for line in dataset : 
+            l = line.split(",")
+            #check date
+            #concat atributes by position 
+               
+
+
+
 
 
 

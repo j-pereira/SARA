@@ -79,9 +79,6 @@ class SRS :
             
             if lineSplited[0] == "Nmbr" : 
                 flag = True
-            
-            print(line)
-           
        
         if not self.regions : 
             region = Region()

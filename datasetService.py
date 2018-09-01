@@ -235,7 +235,7 @@ class DatasetService :
         self.printYearsToUpdate()
         self.downloadFiles()
 
-        print("\n ---- \n")
+        print("\n -- DOWNLOAD TERMINA AQUI -- \n")
 
         self.loadRegionsToUpdate()
         self.printRegionsToUpdate()
