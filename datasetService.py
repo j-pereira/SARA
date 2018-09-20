@@ -209,7 +209,11 @@ class DatasetService :
             
         self.fileLines = list()
         self.fileLines = listMagConfiguration
-    
+
+
+
+    def clearListOfDaysToUpdate(self) : 
+        self.listOfDaysToUpdate = list()
 
 
     
@@ -249,6 +253,7 @@ class DatasetService :
         self.createDatasetFileLines()
         self.printFileLines()
         self.saveDatasetFile()
+        self.clearListOfDaysToUpdate()
     
 
 

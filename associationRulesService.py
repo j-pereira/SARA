@@ -2,6 +2,7 @@ import pandas as pd
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import apriori
 from mlxtend.frequent_patterns import association_rules
+from datetime import datetime, timedelta
 import csv
 
 
@@ -133,6 +134,7 @@ class AssociationRulesService :
         return newFileLines
 
 
+
     def getTransactionalDataset(self) : 
         with open(self.transactionalDataset, 'r') as f:
             reader = csv.reader(f)
@@ -140,23 +142,118 @@ class AssociationRulesService :
         return dataset
 
 
-    def getClassifiedDataset(self) : 
-        return open(self.classifiedDataset, 'r' )  
+
+    def getOriginalDataset(self) : 
+        return open(self.originalDataset, 'r' )  
     
 
 
-    def getClassifiedDatasetByPeriod(self, holeBase, startYear, startMonth, startDay, endYear, endMonth, endDay, area, magClassification, xray, radio) : 
-        dataset = self.getClassifiedDataset()
-        dataSerched = list()
-        transaction = ""
+    def getClassifiedDataset(self) : 
+        return open(self.classifiedDataset, 'r' )  
+
+
+
+    def getDatasetByPeriod(self, dataset, lastDateInDataset, holeBase, startYear, startMonth, startDay, endYear, endMonth, endDay, area, sNumber, magClassification, xray, radio) : 
+        dataByPeriod = list()
+        dataByPeriodAndAttributes = list()
+
+        if not holeBase == "True": 
+            dataByPeriod = self.getPeriod(dataset, lastDateInDataset, startYear, startMonth, startDay, endYear, endMonth, endDay)
+        else : 
+            dataByPeriod = dataset
+
+        if area == "True" and magClassification == "True" and xray == "True" and radio == "True" and (sNumber ==  "True" or sNumber == "none"): 
+            dataByPeriodAndAttributes = dataByPeriod
+        else : 
+            dataByPeriodAndAttributes = self.getAttributes(dataByPeriod, area, sNumber, magClassification, xray, radio)
+
+        return dataByPeriodAndAttributes
+
+
+
+
+    def getPeriod(self, dataset, lastDateInDataset, startYear, startMonth, startDay, endYear, endMonth, endDay) : 
+        dataByPeriod = list()
+        startDate = datetime.strptime(startYear + startMonth + startDay, "%Y%b%d").date()
+        endDate = datetime.strptime(endYear + endMonth + endDay, "%Y%b%d").date()
+        firstdate = datetime.strptime("19970101", "%Y%m%d").date()
+        lastdate = lastDateInDataset
+
+        if startDate < firstdate : 
+            startDate = firstdate
+        if endDate > lastdate : 
+            endDate = lastdate
+        print("Period: " + str(startDate) + " - " + str(endDate))
 
         for line in dataset : 
             l = line.split(",")
-            #check date
-            #concat atributes by position 
-               
+            date = datetime.strptime(l[0] + l[1] + l[2], "%Y%b%d").date()
+
+            if date >= startDate : 
+                if date <= endDate : 
+                    dataByPeriod.append(line)
+            
+        return dataByPeriod
 
 
+
+    def getAttributes(self, dataset, area, sNumber, magClassification, xray, radio) : 
+        if sNumber == "none" : 
+            return self.getAttributesForClassifiedDataset(dataset, area, magClassification, xray, radio)
+        else : 
+            return self.getAttributesForOriginalDataset(dataset, area, sNumber, magClassification, xray, radio)
+
+
+    def getAttributesForOriginalDataset(self, dataset, area, sNumber, magClassification, xray, radio) : 
+        transaction = ""
+        dataByAtributes = list()
+
+        for line in dataset : 
+            l = line.split(",")
+            transaction = l[0] + "," + l[1] + "," + l[2] + "," + l[3] + ","
+            if area == "True" :
+                transaction += l[4]
+            transaction += ","
+            if sNumber == "True" : 
+                transaction += l[5]
+            transaction += ","
+            if magClassification == "True" : 
+                transaction += l[6]
+            transaction += ","
+            if xray == "True" : 
+                transaction += l[7]
+            transaction += ","
+            if radio == "True" : 
+                transaction += l[8]
+            transaction += "\n"
+            dataByAtributes.append(transaction)
+
+        return dataByAtributes
+    
+
+
+    def getAttributesForClassifiedDataset(self, dataset, area, magClassification, xray, radio) : 
+        transaction = ""
+        dataByAtributes = list()
+
+        for line in dataset : 
+            l = line.split(",")
+            transaction = l[0] + "," + l[1] + "," + l[2] + "," + l[3] + ","
+            if area == "True" :
+                transaction += l[4]
+            transaction += ","
+            if magClassification == "True" : 
+                transaction += l[5]
+            transaction += ","
+            if xray == "True" : 
+                transaction += l[6]
+            transaction += ","
+            if radio == "True" : 
+                transaction += l[7]
+            transaction += "\n"
+            dataByAtributes.append(transaction)
+
+        return dataByAtributes
 
 
 

@@ -45,7 +45,50 @@ class LastDateDataset(Resource) :
 
 
 
-class DatasetController(Resource) : 
+class OriginalDataset(Resource) : 
+
+    def get(self) : 
+        datasetService = DatasetService()
+        associationRulesService = AssociationRulesService()
+
+        dataset = associationRulesService.getOriginalDataset()
+        reader = csv.DictReader(dataset, fieldnames = ('year','month','day','region', 'area', 'sNumber', 'magClassification', 'xray', 'radio'))  
+        out = json.dumps( [ row for row in reader ] )  
+        
+        return json.loads(out)
+
+    def post(self) : 
+        parser = reqparse.RequestParser()
+        parser.add_argument('holeBase')
+        parser.add_argument('startYear')
+        parser.add_argument('startMonth')
+        parser.add_argument('startDay')
+        parser.add_argument('endYear')
+        parser.add_argument('endMonth')
+        parser.add_argument('endDay')
+        parser.add_argument('area')
+        parser.add_argument('sNumber')
+        parser.add_argument('magClassification')
+        parser.add_argument('xray')
+        parser.add_argument('radio')
+        args = parser.parse_args()
+        
+        datasetService = DatasetService()
+        associationRulesService = AssociationRulesService()
+        datasetService.setLastDateInDataset()
+
+        originalDataset = associationRulesService.getOriginalDataset()
+        dataset = associationRulesService.getDatasetByPeriod(originalDataset, datasetService.lastDateInDataset, args.holeBase, args.startYear, args.startMonth, args.startDay, args.endYear, args.endMonth, args.endDay, args.area, args.sNumber, args.magClassification, args.xray, args.radio)
+
+        reader = csv.DictReader(dataset, fieldnames = ('year','month','day','region', 'area', 'sNumber', 'magClassification', 'xray', 'radio'))  
+        out = json.dumps( [ row for row in reader ] )  
+        
+        return json.loads(out)
+
+
+
+
+class ClassifiedDataset(Resource) : 
 
     def get(self) : 
         datasetService = DatasetService()
@@ -69,17 +112,19 @@ class DatasetController(Resource) :
         parser.add_argument('endMonth')
         parser.add_argument('endDay')
         parser.add_argument('area')
+        parser.add_argument('sNumber')
         parser.add_argument('magClassification')
         parser.add_argument('xray')
         parser.add_argument('radio')
         args = parser.parse_args()
         
-
         datasetService = DatasetService()
         associationRulesService = AssociationRulesService()
-        
+        datasetService.setLastDateInDataset()
+
         associationRulesService.categorizeDataset()
-        dataset = associationRulesService.getClassifiedDatasetByPeriod(args.holeBase, args.startYear, args.startMonth, args.startDay, args.endYear, args.endMonth, args.endDay, args.area, args.magClassification, args.xray, args.radio)
+        classifiedDataset = associationRulesService.getClassifiedDataset()
+        dataset = associationRulesService.getDatasetByPeriod(classifiedDataset, datasetService.lastDateInDataset, args.holeBase, args.startYear, args.startMonth, args.startDay, args.endYear, args.endMonth, args.endDay, args.area, args.sNumber, args.magClassification, args.xray, args.radio)
 
         reader = csv.DictReader(dataset, fieldnames = ('year','month','day','region', 'area', 'magClassification', 'xray', 'radio'))  
         out = json.dumps( [ row for row in reader ] )  
