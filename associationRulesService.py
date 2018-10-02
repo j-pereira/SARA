@@ -174,8 +174,8 @@ class AssociationRulesService :
 
     def getPeriod(self, dataset, lastDateInDataset, startYear, startMonth, startDay, endYear, endMonth, endDay) : 
         dataByPeriod = list()
-        startDate = datetime.strptime(startYear + startMonth + startDay, "%Y%b%d").date()
-        endDate = datetime.strptime(endYear + endMonth + endDay, "%Y%b%d").date()
+        startDate = datetime.strptime(startYear + startMonth + startDay, "%Y%m%d").date()
+        endDate = datetime.strptime(endYear + endMonth + endDay, "%Y%m%d").date()
         firstdate = datetime.strptime("19970101", "%Y%m%d").date()
         lastdate = lastDateInDataset
 

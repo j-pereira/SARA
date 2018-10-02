@@ -4,10 +4,12 @@ from associationRulesService import AssociationRulesService
 import pandas as pd
 import json
 import csv
-
+import re
 
 def dumper(obj):
     try:
+        print("---- " + str(obj))
+        print("\n")
         return obj.toJSON()
     except:
         return str(obj)
@@ -140,6 +142,11 @@ class AssociationRulesController(Resource) :
         associationRulesService.createTransactionalDataset()
         rules = associationRulesService.generateAssociationRules()
         print(rules)
+
         out = json.dumps(rules.to_dict(), default=dumper)
-        
-        return json.loads(out)
+
+
+        regex = re.compile(r'\bInfinity\b',flags=re.IGNORECASE)
+        sub = re.sub(regex, ' \"Infinity\" ', out)
+
+        return json.loads(sub)
