@@ -8,7 +8,7 @@ SRS Number 167 Issued at 0030Z on 16 Jun 2018
 Report compiled from data received at SWO on 15 Jun
 I.  Regions with Sunspots.  Locations Valid at 15/2400Z 
 Nmbr Location  Lo  Area  Z   LL   NN Mag Type
-2714 N05E30   286  0010 Bxo  04   21 Beta-Gamma-Delta
+2713 N05E30   286  0010 Bxo  04   03 Beta
 IA. H-alpha Plages without Spots.  Locations Valid at 15/2400Z Jun
 Nmbr  Location  Lo
 None

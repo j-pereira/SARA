@@ -8,8 +8,6 @@ import re
 
 def dumper(obj):
     try:
-        print("---- " + str(obj))
-        print("\n")
         return obj.toJSON()
     except:
         return str(obj)
@@ -145,8 +143,47 @@ class AssociationRulesController(Resource) :
 
         out = json.dumps(rules.to_dict(), default=dumper)
 
-
         regex = re.compile(r'\bInfinity\b',flags=re.IGNORECASE)
         sub = re.sub(regex, ' \"Infinity\" ', out)
 
         return json.loads(sub)
+    
+
+    def post(self) :
+        parser = reqparse.RequestParser()
+        parser.add_argument('holeBase')
+        parser.add_argument('startYear')
+        parser.add_argument('startMonth')
+        parser.add_argument('startDay')
+        parser.add_argument('endYear')
+        parser.add_argument('endMonth')
+        parser.add_argument('endDay')
+        parser.add_argument('area')
+        parser.add_argument('sNumber')
+        parser.add_argument('magClassification')
+        parser.add_argument('xray')
+        parser.add_argument('radio')
+        parser.add_argument('support')
+        parser.add_argument('confidence')
+        args = parser.parse_args()
+        
+        datasetService = DatasetService()
+        associationRulesService = AssociationRulesService()
+        datasetService.setLastDateInDataset()
+        associationRulesService.categorizeDataset()
+        classifiedDataset = associationRulesService.getClassifiedDataset()
+        dataset = associationRulesService.getDatasetByPeriod(classifiedDataset, datasetService.lastDateInDataset, args.holeBase, args.startYear, args.startMonth, args.startDay, args.endYear, args.endMonth, args.endDay, args.area, args.sNumber, args.magClassification, args.xray, args.radio)
+        associationRulesService.saveTempClassifiedDataset(dataset)
+        associationRulesService.createTransactionalDatasetByTemp()
+        rules = associationRulesService.generateAssociationRules(args.support, args.confidence)
+        print(rules)
+
+        out = json.dumps(rules.to_dict(), default=dumper)
+        regex = re.compile(r'\bInfinity\b', flags=re.IGNORECASE)
+        sub = re.sub(regex, ' \"Infinity\" ', out)
+        
+        regex1 = re.compile(r'\bfrozenset\b', flags=re.IGNORECASE)
+        sub1 = re.sub(regex1, ' ', sub)
+
+        return json.loads(sub1)
+

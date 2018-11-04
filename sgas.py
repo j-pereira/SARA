@@ -54,12 +54,13 @@ class SGAS:
 
         for line in self.fileLines : 
             lineSplited = line.split(" ")
+            print(lineSplited)
 
             if lineSplited[0] == ":Issued:" :
                 year = lineSplited[1]
                 month = lineSplited[2]
                 day = lineSplited[3]
-            
+                        
             if flag == True :
                 if lineSplited[0] == "B." : 
                     break
@@ -67,6 +68,7 @@ class SGAS:
                     if line == "None\n" : 
                         break
                     else : 
+                        
                         event = Event()
                         event.year = year
                         event.month = month
@@ -94,6 +96,9 @@ class SGAS:
         elif flag == "radio" :
             cont = Header.cmRadio
         
+        print(line)
+        print(cont)
+
         while line[cont] != " " :
             cont = cont - 1
 

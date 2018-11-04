@@ -117,7 +117,7 @@ class DatasetService :
     def organizeFiles(filePath, year, _type, tarFileName) : 
         DatasetService.unzipfile(filePath + year + "/" + year + tarFileName, filePath + year + "/")
         DatasetService.deleteFile(filePath + year + "/" + year + tarFileName)
-        DatasetService.moveFiles(filePath, year, _type)
+        #DatasetService.moveFiles(filePath, year, _type)
 
 
 
@@ -242,12 +242,12 @@ class DatasetService :
         print("\n -- DOWNLOAD TERMINA AQUI -- \n")
 
         self.loadRegionsToUpdate()
-        self.printRegionsToUpdate()
+        #self.printRegionsToUpdate()
 
         print("\n ---- \n")
 
         self.loadEventsToUpdate()
-        self.printEventsToUpdate()
+        #self.printEventsToUpdate()
         print("\n ---- \n")
 
         self.createDatasetFileLines()

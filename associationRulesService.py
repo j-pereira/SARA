@@ -9,6 +9,7 @@ import csv
 class AssociationRulesService : 
     originalDataset = "files/dataset.txt"
     classifiedDataset = "files/classifiedDataset.txt"
+    tempClassifiedDataset= "files/tempClassifiedDataset.txt"
     transactionalDataset = "files/transactionalDataset.txt"
 
 
@@ -48,24 +49,24 @@ class AssociationRulesService :
         if area != "" : 
             area = int(area)
             if area < 200 : 
-                return "areasmall"
+                return "area_pequena"
             elif area >= 200 and area < 500 : 
-                return "areamedium"
+                return "area_media"
             elif area >= 500 and area < 1000 : 
-                return "arealarge" 
+                return "area_grande" 
             elif area >=1000 :
-                return "areahuge"
+                return "area_gigantesca"
         else : 
             return area
 
     
     def classifySunspot(self, sunspot) : 
-        return sunspot.lower().replace("-", "")
+        return sunspot.lower().replace("-", "_")
 
     
     def classifyXray(self, xray) : 
         if xray != "" : 
-            return "xray" + xray[:1]
+            return "raiox_" + xray[:1]
         else : 
             return xray
 
@@ -74,13 +75,13 @@ class AssociationRulesService :
         if radio != "" : 
             radio = int(radio)
             if radio < 80 : 
-                return "radiolow"
+                return "radio_baixo"
             elif radio >= 80 and radio < 120 : 
-                return "radiomedium"
+                return "radio_medio"
             elif radio >= 120 and radio < 160 : 
-                return "radiohigh" 
+                return "radio_alto" 
             elif radio >= 160 :
-                return "radioultra_high"
+                return "radio_altissimo"
         else : 
             return radio
 
@@ -100,7 +101,20 @@ class AssociationRulesService :
         _file.writelines(fileLines)
         _file.close()
 
-    
+    def createTransactionalDatasetByTemp(self) :
+        _file = open(self.tempClassifiedDataset)
+        fileLines = list()
+        for line in _file : 
+            fileLines.append(line)
+
+        fileLines = self.removeDateAndRegion(fileLines)
+        fileLines = self.cleanEmptyAttributes(fileLines)
+        
+        _file = open(self.transactionalDataset, 'w')
+        _file.writelines(fileLines)
+        _file.close()
+
+
     def removeDateAndRegion(self, fileLines) : 
         newFileLines = list()
         for line in fileLines : 
@@ -141,11 +155,15 @@ class AssociationRulesService :
             dataset = list(reader)
         return dataset
 
-
-
     def getOriginalDataset(self) : 
         return open(self.originalDataset, 'r' )  
     
+    def saveTempClassifiedDataset(self, dataset) :
+        _file = open(self.tempClassifiedDataset, "w")
+        for line in dataset :
+            l = line.split("\n")
+            _file.write(l[0] + "\n")
+        _file.close()
 
 
     def getClassifiedDataset(self) : 
@@ -258,18 +276,21 @@ class AssociationRulesService :
 
 
 
-    def generateAssociationRules(self) : 
+    def generateAssociationRules(self, support, confidence) : 
         dataset = self.getTransactionalDataset()
+        support = float(support)
+        confidence = float(confidence)
+        print(support)
+        print(confidence)
 
         te = TransactionEncoder()
         te_ary = te.fit(dataset).transform(dataset)
         df = pd.DataFrame(te_ary, columns=te.columns_)
 
-        frequent_itemsets = apriori(df, min_support=0.1, use_colnames=True)
+        frequent_itemsets = apriori(df, min_support=support, use_colnames=True)
         print(frequent_itemsets)
         print("\n-----------\n")
-
-        rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.1)
+        rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=confidence)
         
         return rules
 
